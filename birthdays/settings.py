@@ -92,6 +92,9 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST'), # check env variables
         'PORT': os.getenv('DB_PORT'), # check env variables
         'ATOMIC_REQUESTS': True,
+        'TEST':  {
+            'NAME': 'birthdays_test',
+        },
     }
 }
 

@@ -10,4 +10,4 @@ class People(models.Model):
         ordering = ['created_at', 'date_of_birth']
 
     def __str__(self):
-        return '%s ' % (self.username)
+        return '%s, %s ' % (self.username, self.date_of_birth)

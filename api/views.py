@@ -72,9 +72,6 @@ class PersonView(ListCreateAPIView):
 
         message = Helpers().birthday_message(person.username, days_to_birthday)
 
-        parsed_message = json.loads(message)
-        pretty_message = json.dumps(parsed_message, indent=2, sort_keys=True)
-
         return Response(message, status=status.HTTP_200_OK)
 
     def put(self, request):
@@ -111,9 +108,12 @@ class Helpers():
             content = '{{"message": "Hello, {0}! Your birthday is in {1} day(s)"}}'.format(username, number_of_days)
             return content
 
-    def get_date_from(self, date_string):
+    def get_date_from_string(self, date_string):
         date_data = self.split_date(date_string)
-        formatted_date = self.get_date_from_int(date_data[0], date_data[1], date_data[2])
+        date_year = int(date_data[0])
+        date_month = int(date_data[1])
+        date_day = int(date_data[2])
+        formatted_date = self.get_date_from_int(date_year, date_month, date_day)
         return formatted_date
 
     def get_date_from_int(self, date_year, date_month, date_day):
