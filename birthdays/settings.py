@@ -37,7 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer', # For JSON Rendering Responses
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,8 +85,13 @@ WSGI_APPLICATION = 'birthdays.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'), # check env variables
+        'USER': os.getenv('DB_USER'), # check env variables
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'), # check env variables
+        'PORT': os.getenv('DB_PORT'), # check env variables
+        'ATOMIC_REQUESTS': True,
     }
 }
 
@@ -112,6 +127,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# DEBUG = True
+
+DATE_FORMAT = "Y-m-d"
 
 
 # Static files (CSS, JavaScript, Images)
