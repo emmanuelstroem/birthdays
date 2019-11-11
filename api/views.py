@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import date
 
-import logging
 import json
 
 from api.models import People
@@ -13,11 +12,7 @@ from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, GenericAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
-
 # Create your views here.
-
 class PeopleView(ListCreateAPIView):
 
     serializer_class = PeopleSerializer
@@ -79,7 +74,6 @@ class PersonView(ListCreateAPIView):
 
         parsed_message = json.loads(message)
         pretty_message = json.dumps(parsed_message, indent=2, sort_keys=True)
-        print(pretty_message)
 
         return Response(message, status=status.HTTP_200_OK)
 
@@ -103,14 +97,12 @@ class Helpers():
         if today < birthday_this_year: # birthday is in N days this year
             remaining_days = (birthday_this_year - today).days
             return remaining_days
-
         elif today > birthday_this_year: # birthday is in future
             remaining_days = (birthday_next_year - today).days
             return remaining_days
         else: #birthday today
             return 0
             
-
     def birthday_message(self, username, number_of_days):
         if number_of_days == 0: # check if birthday us today
             content = '{{"message": "Hello, {0}! Happy birthday!"}}'.format(username)
