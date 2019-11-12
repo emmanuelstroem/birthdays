@@ -1,26 +1,34 @@
 steps:
 
+- id: Copy Yaml for Migration Job
+  name: gcr.io/cloud-builders/gsutil
+  args: ['cp', 'gs://$PROJECT_ID-yamls/migration-job.yaml', '.']
+
+- id: Copy Yaml for Tests Job
+  name: gcr.io/cloud-builders/gsutil
+  args: ['cp', 'gs://$PROJECT_ID-yamls/test-job.yaml', '.']
+
 - id: Build Docker Image
   name: 'gcr.io/cloud-builders/docker'
   args: ['build', '--build-arg', 'project_id=$PROJECT_ID', '-t', 'gcr.io/$PROJECT_ID/${_APP_}:${_ENV_}-$BRANCH_NAME-$SHORT_SHA', '-t', 'gcr.io/$PROJECT_ID/${_APP_}:${_ENV_}-latest', '.']
 
 - id: Run Migrations Job
   name: 'gcr.io/cloud-builders/kubectl'
-  args: ['apply', '-f', '.kubernetes/migrations-job.yaml']
+  args: ['apply', '-f', 'migrations-job.yaml']
   env:
-  - 'CLOUDSDK_COMPUTE_ZONE=eu-west1'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=${_APP_}-${_REGION_}-cluster'
-  waitFor:
-  - 'Run Migrations Job'
-
-- id: Run Tests Job
-  name: 'gcr.io/cloud-builders/kubectl'
-  args: ['apply', '-f', '.kubernetes/tests-job.yaml']
-  env:
-  - 'CLOUDSDK_COMPUTE_ZONE=eu-west1'
+  - 'CLOUDSDK_COMPUTE_ZONE=${_REGION_}'
   - 'CLOUDSDK_CONTAINER_CLUSTER=${_APP_}-${_REGION_}-cluster'
   waitFor:
   - 'Build Docker Image'
+
+- id: Run Tests Job
+  name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'tests-job.yaml']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=${_REGION_}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_APP_}-${_REGION_}-cluster'
+  waitFor:
+  - 'Run Migrations Job'
 
 - id: Rollout Depployment to GKE
   name: 'gcr.io/cloud-builders/kubectl'
@@ -33,7 +41,7 @@ steps:
   - --record=true
   - --namespace=${_APP_}
   env:
-  - 'CLOUDSDK_COMPUTE_ZONE=eu-west1'
+  - 'CLOUDSDK_COMPUTE_ZONE=${_REGION_}'
   - 'CLOUDSDK_CONTAINER_CLUSTER=${_APP_}-${_REGION_}-cluster'
   waitFor:
   - 'Run Tests Job'
@@ -41,7 +49,7 @@ steps:
 substitutions:
     _ENV_: production
     _APP_: birthdays
-    _REGION_: eu
+    _REGION_: europe-west1
 
 images:
 - 'gcr.io/$PROJECT_ID/${_APP_}:${_ENV_}-$BRANCH_NAME-$SHORT_SHA'
