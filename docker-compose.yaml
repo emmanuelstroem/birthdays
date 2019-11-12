@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db: #this will be the db_host in .env file
+    image: postgres
+    container_name: Postgres
+    volumes: 
+      - ./db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: birthdays # update in .env file
+      POSTGRES_USER: postgres # update in .env file
+      POSTGRES_PASSWORD: sergtsop # update in .env file
+  web:
+    build: .
+    env_file:
+     - ./.env
+    command: sh run_tests.sh
+    container_name: Web
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+    driver: local

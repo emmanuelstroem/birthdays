@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# # Collect static files
-# echo "Collect static files"
-# python manage.py collectstatic --noinput
-
 set -e
 
 #  Install Requirements
@@ -17,19 +13,13 @@ done
 
 >&2 echo "Postgres is up - executing command"
 
-# python manage.py flush --no-input
-
-#  Make database migrations
+# Make database migrations
 echo "Make database migrations"
 python manage.py makemigrations
 
 # Apply database migrations
 echo "Apply database migrations"
 python manage.py migrate
-
-# echo "Create Admin User"
-# python manage.py createsuperuser --username admin --password s3cur3 --noinput --email 'info@10lines.eu'
-# python manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'info@10lines.com', 'AdminUser')"
 
 # Run Tests
 echo "Running Unit Tests"

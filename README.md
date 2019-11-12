@@ -43,6 +43,9 @@ Shows Simple Happy Birthday Message or How many days to Birthday.
 8. Stackdriver:
     - Logging and future alerts
 
+9. VPC:
+    - Internal conmmunication between cluster and database
+
 # Requirements
 - Docker Runtime Environment
 - Docker Compose
