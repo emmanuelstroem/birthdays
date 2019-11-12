@@ -46,14 +46,20 @@ Shows Simple Happy Birthday Message or How many days to Birthday.
 9. VPC:
     - Internal conmmunication between cluster and database
 
+# Using Terraform to provision infrastructure:
+Follow the [Terraform Guide](.iaac/README.md)
+
 # Requirements
 - Docker Runtime Environment
 - Docker Compose
 
 # Run Unit Tests
 There are 9 Tests in total under `api/tests.py`
-### Commamnd
+### Locally
     python manage.py tests
+
+### CircleCI
+    circleci build
 
 # Run App Locally
 ### Pre-Requisites
