@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: birthdays-deployment
+  labels:
+    app: birthdays
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: birthdays
+    spec:
+      containers:
+      - name: birthdays-app
+        image: gcr.io/resolut-birthdays/birthdays-latest
+        imagePullPolicy: Always
+        command: ['sh', 'run_production.sh']
+        ports: 
+        - name: birthday-app-port
+          containerPort: 8000
+        env:
+        - name: DB_NAME
+          value: "birthdays_prod"
+        - name: DB_HOST
+          value: "birthdays.production.cloudsql.local"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: birthdays-credentials
+              key: db-username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: birthdays-credentials
+              key: db-password
+        
+      volumes:
+      - name: birthdays-credentials
+        secret:
+          secretName: birthdays-credentials
+        

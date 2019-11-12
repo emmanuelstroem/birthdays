@@ -58,7 +58,7 @@ There are 9 Tests in total under `api/tests.py`
 # Run App Locally
 ### Pre-Requisites
 - Rename `.env.example` to `.env` and update with necessary database details
-- Update `.env` file with correct database details
+- Update `docker-compose.yaml` and `.env` file with correct database details
 
 ### Run Command
     docker-compose up
@@ -72,6 +72,10 @@ There are 9 Tests in total under `api/tests.py`
 # Run in Production
 Assumes you're using Cloud Source Respository otherwise:
 -  Connect Repositoy to Cloud Source Repository https://source.cloud.google.com/repo/connect
+
+## Coopy Config to GCS bucket named `{{PROJECT-ID}}-yaml`:
+-  .kubernetes/migration-job.yaml
+-  .kubernetes/test-job.yaml
 
 ## Flow
 ---

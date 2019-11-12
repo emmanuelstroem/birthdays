@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: birthdays-migration-job
+spec:
+  template:
+    spec:
+      ttlSecondsAfterFinished: 100
+      containers:
+      - name: birthdays-app
+        image: gcr.io/resolut-birthdays/birthdays-latest
+        imagePullPolicy: Always
+        command: ['sh', 'run_migrations.sh']
+        env:
+        - name: DB_NAME
+          value: "birthdays_prod"
+        - name: DB_HOST
+          value: "birthdays.prod.cloudns.local"
+        - name: DB_PORT
+          value: "5432"
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: birthday-credentials
+              key: db-username
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: birthday-credentials
+              key: db-password
+      restartPolicy: Never
+      volumes:
+      - name: birthdays-credentials
+        secret:
+          secretName: birthdays-credentials
+  backoffLimit: 4
